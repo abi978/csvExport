@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  // git hub link is used as fake REST API
+  baseUrl: 'https://raw.githubusercontent.com/abi978/',
 };
 
 /*
