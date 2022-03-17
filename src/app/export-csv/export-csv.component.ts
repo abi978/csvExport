@@ -37,12 +37,15 @@ export class ExportCsvComponent implements OnInit {
 
   // table data
   private getTableData() {
-    this.methods
-      .get(EndPointService.getDataApi)
-      .subscribe((apiResponse: storeData) => {
+    this.methods.get(EndPointService.getDataApi).subscribe(
+      (apiResponse: storeData) => {
         this.tableDataApiRes = apiResponse;
         this.getTableDataStructure(this.tableDataApiRes);
-      });
+      },
+      (error: any) => {
+        this.toast.error(error.error);
+      }
+    );
   }
   // **
 
