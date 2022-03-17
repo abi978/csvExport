@@ -13,7 +13,7 @@ export class CsvDownloadService {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'store data');
     XLSX.writeFile(wb, excelFileName + '.ods');
-    this.toast.success('Excel Exported Succesfully');
+    this.toast.success('CSV Exported Succesfully');
   }
   // **
 }
