@@ -81,7 +81,7 @@ export class ExportCsvComponent implements OnInit {
       for (let item of this.tableDataApiRes) {
         for (let details of item.details) {
           var detail: any = {
-            Name: item.storeName,
+            Store_name: item.storeName,
             Department: details.department,
             No_of_items: details.stock,
             No_of_sales: details.sales,
@@ -91,7 +91,7 @@ export class ExportCsvComponent implements OnInit {
 
         var total: any = {
           // name field is kept empty since name is not needen in excel for total
-          Name: '',
+          Store_name: '',
           Department: 'Total',
           No_of_items: item.totalStock,
           No_of_sales: item.totalSales,
