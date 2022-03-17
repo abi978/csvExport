@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { EndPointService } from 'src/app/config/end-point';
 
 @Injectable({
   providedIn: 'root',
@@ -12,16 +11,12 @@ export class HttpService {
 
   // common http methods declared for the whole project
 
-  public get(api: string, resType?: any): Observable<any> {
+  public get(api: string): Observable<any> {
     // resType is declared since API form git hub return as text format
-    return this.http
-      .get(api, {
-        responseType: resType,
+    return this.http.get(api).pipe(
+      map((res: any) => {
+        return res;
       })
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
+    );
   }
 }
