@@ -1,5 +1,40 @@
 <div fxLayout="column" fxLayoutGap="25px">
-  <div class="card" fxLayoutGap="5px" fxLayoutAlign="center" fxLayout="column">
+  <div fxFlex="20" fxLayout="row" fxLayoutAlign="space-between center">
+    <button
+      mat-raised-button
+      *ngIf="showNextView == false"
+      (click)="showNextView = !showNextView"
+      color="primary"
+    >
+      Show in Grid View
+    </button>
+    <button
+      mat-raised-button
+      *ngIf="showNextView == true"
+      (click)="showNextView = !showNextView"
+      color="primary"
+    >
+      Show in Table View
+    </button>
+
+    <div>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="exportToCsv(tableData)"
+      >
+        Export CSV
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="card"
+    *ngIf="showNextView == false"
+    fxLayoutGap="5px"
+    fxLayoutAlign="center"
+    fxLayout="column"
+  >
     <div
       class="card-title"
       fxLayout="row"
@@ -7,66 +42,52 @@
       fxLayoutGap="20px"
     >
       <div>
-        <div>Store Data</div>
-      </div>
-      <div>
-        <button mat-raised-button color="primary" (click)="exportToCsv()">
-          Export CSV
-        </button>
+        <div>Film Data</div>
       </div>
     </div>
 
     <div fxFill fxLayout="column" fxLayoutAlign="space-between stretch">
-      <div fxLayout="column" fxLayoutGap="20px">
-        <table
-          mat-table
-          [dataSource]="dataSource"
-          matSort
-          table
-          table-responsive-xs
-          bookings
-        >
+      <div fxLayout="column" fxLayoutGap="20px" class="tableDiv">
+        <table mat-table [dataSource]="dataSource" table table-responsive-xs>
           <ng-container matColumnDef="storeName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Store Name
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Film Name</th>
             <td mat-cell *matCellDef="let element">
               <div fxLayout="row" fxLayoutGap="12px">
                 <div fxLayout="column" fxLayoutAlign="center start">
-                  <div class="title">{{ element.storeName }}</div>
+                  <div class="title">
+                    {{ element.name || "N/A" | titlecase }}
+                  </div>
                 </div>
               </div>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="department">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Department
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Actor Name</th>
             <td mat-cell *matCellDef="let element">
               <div fxLayout="column">
                 <div class="secondary-text">
-                  {{ element.department }}
+                  {{ element.actor || "N/A" | titlecase }}
                 </div>
               </div>
             </td>
           </ng-container>
           <ng-container matColumnDef="stock">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
+            <th mat-header-cell *matHeaderCellDef>Gender</th>
             <td mat-cell *matCellDef="let element">
               <div fxLayout="column">
                 <div class="secondary-text">
-                  {{ element.stock }}
+                  {{ element.gender || "N/A" | titlecase }}
                 </div>
               </div>
             </td>
           </ng-container>
           <ng-container matColumnDef="sales">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Sales</th>
+            <th mat-header-cell *matHeaderCellDef>DOB</th>
             <td mat-cell *matCellDef="let element">
               <div fxLayout="column">
                 <div class="secondary-text">
-                  {{ element.sales }}
+                  {{ element.dateOfBirth || "N/A" }}
                 </div>
               </div>
             </td>
@@ -82,10 +103,41 @@
       <mat-paginator
         pageSize="10"
         [length]="pagelength"
-        [pageSizeOptions]="[10, 15, 25, 100]"
+        [pageSizeOptions]="[10, 15, 20]"
         #paginator
         showFirstLastButtons
       ></mat-paginator>
+    </div>
+  </div>
+
+  <!-- grid view -->
+
+  <div
+    fxFill
+    fxLayout="column"
+    fxLayoutAlign="space-between stretch"
+    *ngIf="showNextView == true"
+  >
+    <div
+      fxLayout="row wrap"
+      fxLayoutGap="20px"
+      class="gridView"
+      fxLayoutAlign="space-evenly start"
+    >
+      <mat-card
+        class="grid-card"
+        fxFlex="23"
+        *ngFor="let item of tableData; index as i"
+      >
+        <mat-card-title-group>
+          <mat-card-title>Film: {{ item.name | titlecase }}</mat-card-title>
+          <mat-card-subtitle fxLayout="column">
+            <div>Actor: {{ item.actor || "N/A" | titlecase }}</div>
+            <div>Gender: {{ item.gender || "N/A" | titlecase }}</div>
+            <div>Date of birth: {{ item.dateOfBirth || "N/A" }}</div>
+          </mat-card-subtitle>
+        </mat-card-title-group>
+      </mat-card>
     </div>
   </div>
 </div>

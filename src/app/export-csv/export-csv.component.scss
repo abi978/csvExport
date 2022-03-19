@@ -1,3 +1,25 @@
-.card {
-  height: 82vh;
+app-export-csv {
+  .card {
+    height: 76vh;
+    .tableDiv {
+      overflow-y: scroll;
+      height: 100%;
+    }
+  }
+  .gridView {
+    overflow-y: scroll;
+    height: 67vh;
+    width: 100%;
+  }
+  .grid-card {
+    background-color: aliceblue;
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    margin-right: 0px !important;
+    margin: 5px;
+    .mat-card-title {
+      font-size: 20px !important;
+    }
+  }
 }

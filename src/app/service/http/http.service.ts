@@ -11,9 +11,8 @@ export class HttpService {
 
   // common http methods declared for the whole project
 
-  public get(api: string): Observable<any> {
-    // resType is declared since API form git hub return as text format
-    return this.http.get(api).pipe(
+  public get(api: string, params?: any): Observable<any> {
+    return this.http.get(api, { params: params }).pipe(
       map((res: any) => {
         return res;
       })

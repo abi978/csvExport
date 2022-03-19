@@ -5,6 +5,6 @@ export class EndPointService {
   // getter method is used to declare the apis globally
 
   public static get getDataApi(): string {
-    return this.apiUrl + 'dummpApi/master/db.json';
+    return this.apiUrl + '/characters';
   }
 }

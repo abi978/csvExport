@@ -6,8 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [],
@@ -25,7 +25,7 @@ import { MatTableModule } from '@angular/material/table';
     MatButtonModule,
     MatPaginatorModule,
     MatTableModule,
-    MatSortModule,
+    MatCardModule
   ],
   exports: [
     CommonModule,
@@ -37,7 +37,7 @@ import { MatTableModule } from '@angular/material/table';
     MatButtonModule,
     MatPaginatorModule,
     MatTableModule,
-    MatSortModule,
+    MatCardModule
   ],
   providers: [DatePipe],
 })

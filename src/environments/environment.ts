@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   // git hub link is used as fake REST API
-  baseUrl: 'https://raw.githubusercontent.com/abi978/',
+  baseUrl: 'http://hp-api.herokuapp.com/api',
 };
 
 /*

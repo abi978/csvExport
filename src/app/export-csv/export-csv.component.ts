@@ -1,18 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { EndPointService } from '../config/end-point';
 import { HttpService } from '../service/http/http.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
 import { ToastrService } from 'ngx-toastr';
 import { CsvDownloadService } from '../service/csv/csv-download.service';
 import { DatePipe } from '@angular/common';
-import { storeData } from './export-csv.model';
 
 @Component({
   selector: 'app-export-csv',
   templateUrl: './export-csv.component.html',
   styleUrls: ['./export-csv.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+
 })
 export class ExportCsvComponent implements OnInit {
   constructor(
@@ -23,24 +23,23 @@ export class ExportCsvComponent implements OnInit {
   ) {}
 
   tableData: any = [];
-  tableDataApiRes: any = [];
+  showNextView: boolean = false;
   pagelength: any;
   dataSource!: MatTableDataSource<any>;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = ['storeName', 'department', 'stock', 'sales'];
 
   ngOnInit(): void {
-    this.getTableData();
+    this.getData();
   }
 
-  // table data
-  private getTableData() {
+  // data from API
+  private getData() {
     this.methods.get(EndPointService.getDataApi).subscribe(
-      (apiResponse: storeData) => {
-        this.tableDataApiRes = apiResponse;
-        this.getTableDataStructure(this.tableDataApiRes);
+      (apiResponse: any) => {
+        this.bindTableData(apiResponse);
       },
       (error: any) => {
         this.toast.error(error.error);
@@ -49,59 +48,25 @@ export class ExportCsvComponent implements OnInit {
   }
   // **
 
-  // converts the api response to required structure for table view and csv conversion
-  private getTableDataStructure(res: any): void {
-    // assigning the details to response
-    this.tableDataApiRes.map((response: any) => {
-      response.details.map((detailsResponse: any) => {
-        return (
-          (detailsResponse.storeName = response.storeName),
-          (detailsResponse.totalStock = response.totalStock),
-          (detailsResponse.totalSales = response.totalSales)
-        );
-      });
-    });
-    // response is converted as objects for table view
-    let tableData: any = [];
-    this.tableDataApiRes.map((tableRes: any) => {
-      tableRes.details.map((tableRes1: any) => {
-        tableData.push(tableRes1);
-      });
-    });
-    this.bindTableData(tableData);
-  }
-  // **
-
   // function to export table data as CSV file
-  public exportToCsv(): void {
+  public exportToCsv(data: Array<any>): void {
     const exportData: any = [];
-    if (this.tableDataApiRes.length == 0) {
+    if (data.length == 0) {
       this.toast.info('Table is empty');
-    } else if (this.tableDataApiRes.length > 0) {
-      for (let item of this.tableDataApiRes) {
-        for (let details of item.details) {
-          var detail: any = {
-            Store_name: item.storeName,
-            Department: details.department,
-            No_of_items: details.stock,
-            No_of_sales: details.sales,
-          };
-          exportData.push(detail);
-        }
-
-        var total: any = {
-          // name field is kept empty since name is not needen in excel for total
-          Store_name: '',
-          Department: 'Total',
-          No_of_items: item.totalStock,
-          No_of_sales: item.totalSales,
+    } else if (data.length > 0) {
+      for (let item of data) {
+        var detail: any = {
+          film_name: item.name || 'N/A',
+          actor: item.actor || 'N/A',
+          gender: item.gender || 'N/A',
+          dob: item.dateOfBirth || 'N/A',
         };
-        exportData.push(total);
+        exportData.push(detail);
       }
       // today date is used as file name
       let today = this.transformData(new Date()) + '_store_data';
-
-      this.csvExport.exportAsCsvFile(exportData, today);
+      let headding = 'Film Name,Actor Name,Gender,DOB' + '\r\n';
+      this.csvExport.exportAsCsvFile(exportData, today, headding);
     } else {
       this.toast.info('Error in exporting excel');
     }
@@ -121,7 +86,6 @@ export class ExportCsvComponent implements OnInit {
     this.pagelength = res.length;
     this.dataSource = new MatTableDataSource<any>(this.tableData);
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
     if (this.dataSource.filteredData.length == 0) {
       this.toast.info('No Data Found');
     }
